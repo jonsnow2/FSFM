@@ -1,0 +1,44 @@
+function [ wayPointRetorno ] = getNearestWayPoint( wayPoints,objectives )
+%getNearestWayPoint Summary of this function goes here
+%   Detailed explanation goes here
+    wayPointRetorno = 0;
+    [rows, cols] = size(wayPoints);
+    if((cols) > 0)
+        minDeepness = min(wayPoints(4,:));
+        wayPoints_filtered = wayPoints(: , wayPoints(4,:) == minDeepness);
+        if(size(wayPoints_filtered,2) > 1
+        minDistance = min(wayPoints(5,:));
+        wayPoints_filtered2 = wayPoints(: , wayPoints_filtered(5,:) == minDistance);
+        maxRadius = max(wayPoints(3,:));
+        wayPoints_filtered3 = wayPoints(: , wayPoints_filtered2(3,:) == maxRadius);
+        [m, n] = size(objectives);
+        if ((n) > 0)
+            wayPointsMin = zeros(1,n);
+            distances = zeros(1,n);
+            for i  = 1:n
+                objective = objectives(:,i);
+                difffe = bsxfun(@minus,objective(1:2),wayPoints_filtered3(1:2,:));
+                [distance, index] = min(dot(difffe,difffe));
+                wayPointsMin(i) = index;
+                distances(i) = distance;
+            end;
+
+            [distance, index] = min(distances);
+
+            wayMinObjective = wayPoints_filtered3(:,wayPointsMin(index));
+
+            if(dot(wayMinObjective,wayMinObjective) ~= 0)
+                wayPointRetorno = wayMinObjective;
+            else
+                fprintf('Fail to get new waypoint, impossible to continue.');%wayPoint = zeros(3,1);%getNearestWayPoint( pedestrianWayPoint(1:2), pedestrianWayPoint, wayPoints,obstacles,objectives );
+            end;
+        else
+            wayMinObjective
+        else
+            fprintf('No objectives, impossible to continue');
+        end;
+    else
+        fprintf('No visible waypoint, impossible to continue');
+    end;
+end
+

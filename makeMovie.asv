@@ -1,0 +1,37 @@
+function [frames ] = makeMovie( pedestriansLog,obstacles,wayPoints,objectives )
+%makeMovie Summary of this function goes here
+%   Detailed explanation goes here
+
+    [m,n] = size(pedestriansLog);
+    lengthPedestrian = 9;
+    iterations = n;
+    numPedestrians = m/lengthPedestrian;
+    xsWayPoints = wayPoints(1,:);
+    ysWayPoints = wayPoints(2,:);
+    
+    xsObjectives = objectives(1,:);
+    ysObjectives = objectives(2,:);
+    
+    peds = ((0:(numPedestrians-1))*lengthPedestrian);
+    xs = pedestriansLog(peds + 1,1);
+    ys = pedestriansLog(peds + 2,1);
+    
+    %h = plot(xs,ys,'r.');
+    %plot(xsWayPoints,ysWayPoints,'b.');
+    h = plot(xs,ys,'r.');
+    %movie = [];
+    movie(iterations) = struct('cdata',[],'colormap',[]);
+    for iter = 1:iterations
+        hold on;
+        xs = pedestriansLog(peds + 1,iter);
+        ys = pedestriansLog(peds + 2,iter);
+        h = plot(xs,ys,'r.',xsWayPoints,ysWayPoints,'b.',xsObjectives,ysObjectives,'c.');
+        plotObstacles(obstacles);
+        movie(iter) = getframe();
+        hold off;
+        clf();
+
+    end;
+
+end
+
